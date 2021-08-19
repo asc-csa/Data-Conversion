@@ -1,0 +1,35 @@
+French below.
+
+When running the windii dataset verification script (verification.py), a few discrepancies were found:
+- The summary file O1D_CD did not contain any wind data. All of it's wind data was "N/A" when there are actual wind data stored on the 
+  ftp server.
+- The summary file O1S_CD did not contain any wind data. All of it's wind data was "N/A" when there are actual wind data stored on the 
+  ftp server.
+
+Both of these discrepancies can be explained by the nature of how these files were produced. When switching from summary file
+to summary file (i.e. from O+_FD to O1D_CD), the generating script (windii.py) was manually modified to work for the specific summary file.
+It is very likely that a mistake was made when switching files causing certain data to be completely disregarded.
+
+UPDATE: The previous prediction was correct. Carefully re-generating the mentioned files allowed to fix both mistakes. Rerunning the verification script
+proved this to be correct as all files now ran with a 100% validity with 1000 trials on every single summary file.
+
+UPDATE: The original generating script (windii.py) was modified to generate data in chronological order. The new data has been verified for
+validity again and passed the tests.
+
+=============================================================================
+
+Lors de l'exécution du script de vérification des fichiers synthèse windii (verification.py), quelques problèmes ont été trouvés :
+- Le fichier synthèse O1D_CD ne contenait aucune donnée de vent. Toutes ses données de vent étaient "N/A" alors qu'il y a des données de vent réelles stockées sur le
+  Serveur ftp.
+- Le fichier synthèse O1S_CD ne contenait aucune donnée de vent. Toutes ses données de vent étaient "N/A" lorsqu'il y a des données de vent réelles stockées sur le
+  Serveur ftp.
+
+Ces deux problèmes peuvent être expliqués par la façon dont ces fichiers ont été produits. Lors de la génération d'un fichier synthèse à un autre, (comme par example, de O+_FD vers O1D_CD),
+le script de génération (windii.py) doit être modifié manuellement pour fonctionner pour le fichier synthèse qu'on veut générer.
+Il est très probable qu'une erreur ait été commise lors du changement de fichier, entraînant la négligence totale de certaines données.
+
+MISE À JOUR : La prédiction précédente était correcte. Régénérer attentivement les fichiers mentionnés a permis de corriger les deux erreurs. Réexécution du script de vérification
+prouve que cela était correct car tous les fichiers synthèse démontre maintenant une validité de 100 % avec 1 000 essais sur chaque fichier synthèse.
+
+MISE À JOUR : Le script qui produit les données (windii.py) a été modifié à fin de générer les données en ordre chronologique. Ces données
+ont été testés pour validité et ont passés le test.
