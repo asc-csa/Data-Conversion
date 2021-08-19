@@ -1,3 +1,5 @@
+# WINDII
+
 French below.
 
 The summary files that contain all of the data for the WINDII dataset were produced
@@ -10,7 +12,7 @@ The summary files were produced using the windii.py script, which contains in-co
 The summary files have been tested for validity and a more detailed summary of the validation process can be found in the validation.txt
 file.
 
-=========================================================
+========================================================================
 
 Les fichiers synthèses contenant les données du jeu de données WINDII ont été produits
 par le Centre d'Expertise de Données de l'ASC en utilisant python. Pour plus de détails sur le script qui a
