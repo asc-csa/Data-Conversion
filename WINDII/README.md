@@ -18,6 +18,12 @@ dans le fichier validation.txt. En bref, le test de validité consiste à choisi
 que ce point existe dans le fichier sommaire et qu'il est exactement le même. Ce test est executé plusieurs millier de fois pour guarantir un haut taux de validité.
 Les fichiers sommaires ont tous passés ces tests avec un taux de succès de 100%.
 
+Pour exécuter un script x.py, vous devez vous assurez qu'il y a **un dossier nommé "temp" directement dans le même dossier que x.py** et puis exécuter la ligne
+
+`python x.py`
+
+Dans le terminal.
+
 Un example de l'utilité de ces fichiers sommaire est la création simple de graphiques comme celui-ci:
 ![O1D_FD_Volume Emission Rate_altitude ](https://user-images.githubusercontent.com/56747050/130168857-6e294c07-1f18-4e49-8137-cfc2a49c275d.png)
 
@@ -33,6 +39,12 @@ These summary files were created with the climate and forecast data conventions 
 
 The summary files were produced using the windii.py script, which contains documentation within the code. The validity of the summary files has been tested and a more detailed description of the validation process can be found in the validation.txt file. In short, the validity test consists in choosing a random "point" among the original data and then we verify that this point exists in the summary file and that it is exactly the same. This test is performed several thousand times to ensure a high rate of validity.
 Summary files all passed these tests with a 100% success rate.
+
+To run the script x.py you need to make sure there is **a folder named "temp" directly in the same folder as x.py** and then run the line
+
+`python x.py`
+
+In the terminal.
 
 An example of the usefulness of these summary files is the simple creation of graphics like this:
 ![O1D_FD_Volume Emission Rate_altitude ](https://user-images.githubusercontent.com/56747050/130168857-6e294c07-1f18-4e49-8137-cfc2a49c275d.png)
