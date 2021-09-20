@@ -1,6 +1,7 @@
 from urllib.parse import quote
 from ftplib import FTP, error_perm
 import csv
+import time
 import pandas as pd
 import numpy as np
 import os
@@ -15,13 +16,13 @@ Ex O1S has both types FD and CD. O1S will have two summary files: O1S_FD and O1S
 Filters contains at most three of 'Wind', 'Temperature' and 'VolumeEmissionRate'. There are data fields.
 Based on wanted type and which data fields are present, you must edit the parameters section below to suit the filter you are running.
 '''
-
+print("Started")
 ########### PARAMETERS
 # Here is a list of filters (i.e. O1S, O2, O+, etc.) Generally, I ran one filter at a time.
 filters = ['O1S']
 # The possible data flags are 'W' (Wind), 'T' (Temperature), 'V' (VolumeEmissionRate).
 # Each flag must be added to the list if they exist in the folder of the FTP of the filter you are running
-dataflags = ['W', 'T', 'V']
+dataflags = ['W', 'T','V']
 # If you want to run the summary for the CD type, set the following as true.
 cd = False
 ######################
@@ -30,10 +31,12 @@ cd = False
 types = ['FD1', 'FD2']
 tag = "FD"
 h = "Latitude"
+index = [4,5]
 if cd:
     h = "SZA"
     types = ['CD']
     tag = 'CD'
+    index = [2,3]
 
 # Defining some helper functions. This one is used to read data from a file
 def prep(filename, firstheader):
@@ -54,7 +57,9 @@ def prep(filename, firstheader):
 # This one is used to manage the temporary files to facilitate the process of downloading a file from the FTP.
 def logr(filename, header):
     # We download the wanted file
-    ftp.retrbinary("RETR "+filename, open("temp/"+filename,'wb').write)
+    # ftp.retrbinary("RETR "+filename, open("temp/"+filename,'wb').write)
+    with open("temp/"+filename, 'wb') as fp:
+        ftp.retrbinary("RETR "+filename, fp.write)
     print("RETR "+filename)
     # We obtain the data from it
     data = prep("temp/"+filename,header)
@@ -70,6 +75,8 @@ class Point():
         self.alt = "N/A"
         self.zwind = "N/A"
         self.szw = "N/A"
+        self.mwind = "N/A"
+        self.smw = "N/A"
         self.temp = "N/A"
         self.st = "N/A"
         self.ver = "N/A"
@@ -168,8 +175,7 @@ for filter in filters:
         if not cd:
             write.writerow(['Date', 'Latitude (degree)', 'Longitude (degree)', 'Look', 'Altitude (km)', 'Wind (m/s)', 'Sigma_W', 'Temperature (K)', 'Sigma_T', 'Volume Emission Rate', 'Sigma_E', "Type"])
         else:
-            write.writerow(['Date', 'SZA', 'Altitude (km)', 'Zonal Wind (m/s)', 'Sigma_ZW', 'Temperature (K)', 'Sigma_T', 'Volume Emission Rate', 'Sigma_E', "Type"])
-
+            write.writerow(['Date', 'SZA', 'Altitude (km)', 'Zonal Wind (m/s)', 'Sigma_ZW', 'Merid Wind (m/s)','Sigma_MW', 'Temperature (K)', 'Sigma_T', 'Volume Emission Rate', 'Sigma_E', "Type"])
         # We iterate through each possible dates in chronological order
         for date in dates:
             # Our id tag is going to measure progress and db is the list of points currently read.
@@ -190,7 +196,7 @@ for filter in filters:
                         if not cd:
                             pt.lat, pt.lon, pt.look, pt.alt, pt.wind, pt.sw, pt.type = [line[0], line[1], line[2], line[3], line[4], line[5], types[0]]
                         else:
-                            pt.sza, pt.alt, pt.zwind, pt.szw, pt.type = [line[0], line[1], line[2], line[3], types[0]]
+                            pt.sza, pt.alt, pt.zwind, pt.szw, pt.mwind, pt.smw, pt.type = [line[0], line[1], line[2], line[3], line[4], line[5], types[0]]
                         db.append(pt)
                     del data
                 except error_perm:
@@ -207,10 +213,10 @@ for filter in filters:
                     if len(db) !=0:
                         if len(db)==len(data):
                             for i in range(0,len(db)):
-                                db[i].temp, db[i].st = [data[i][2], data[i][3]]
+                                db[i].temp, db[i].st = [data[i][index[0]], data[i][index[1]]]
                         else:
                             for i in range(0,min(len(db),len(data))):
-                                db[i].temp, db[i].st = [data[i][2], data[i][3]]
+                                db[i].temp, db[i].st = [data[i][index[0]], data[i][index[1]]]
                     else:
                     # If not, we create the point with the information we have
                         for line in data:
@@ -237,10 +243,10 @@ for filter in filters:
                     if len(db) !=0:
                         if len(db)==len(data):
                             for i in range(0,len(db)):
-                                db[i].ver, db[i].sv = [data[i][2], data[i][3]]
+                                db[i].ver, db[i].sv = [data[i][index[0]], data[i][index[1]]]
                         else:
                             for i in range(0,min(len(db),len(data))):
-                                db[i].ver, db[i].sv = [data[i][2], data[i][3]]
+                                db[i].ver, db[i].sv = [data[i][index[0]], data[i][index[1]]]
                     else:
                     # If not, we create the point with the information we have
                         for line in data:
@@ -269,10 +275,7 @@ for filter in filters:
                             pt = Point()
                             pt.date = date
                             # We add the following info to our point for each line, if the type is FD/FO:
-                            if not cd:
-                                pt.lat, pt.lon, pt.look, pt.alt, pt.wind, pt.sw, pt.type = [line[0], line[1], line[2], line[3], line[4], line[5], types[1]]
-                            else:
-                                pt.sza, pt.alt, pt.zwind, pt.szw, pt.type = [line[0], line[1], line[2], line[3], types[1]]
+                            pt.lat, pt.lon, pt.look, pt.alt, pt.wind, pt.sw, pt.type = [line[0], line[1], line[2], line[3], line[4], line[5], types[1]]
                             db.append(pt)
                         del data
                     except error_perm:
@@ -289,20 +292,17 @@ for filter in filters:
                         if len(db) !=0:
                             if len(db)==len(data):
                                 for i in range(0,len(db)):
-                                    db[i].temp, db[i].st = [data[i][2], data[i][3]]
+                                    db[i].temp, db[i].st = [data[i][index[0]], data[i][index[1]]]
                             else:
                                 for i in range(0,min(len(db),len(data))):
-                                    db[i].temp, db[i].st = [data[i][2], data[i][3]]
+                                    db[len(db)-len(data)+i].temp, db[len(db)-len(data)+i].st = [data[i][index[0]], data[i][index[1]]]
                         else:
                         # If not, we create the point with the information we have
                             for line in data:
                                 pt = Point()
                                 pt.date = date
                                 # If the type is FD/FO:
-                                if not cd:
-                                    pt.lat, pt.lon, pt.look, pt.alt, pt.temp, pt.st, pt.type = [line[0], line[1], line[2], line[3], line[4], line[5], types[1]]
-                                else:
-                                    pt.sza, pt.alt, pt.temp, pt.st, pt.type = [line[0], line[1], line[2], line[3], types[1]]
+                                pt.lat, pt.lon, pt.look, pt.alt, pt.temp, pt.st, pt.type = [line[0], line[1], line[2], line[3], line[4], line[5], types[1]]
                                 db.append(pt)
                         del data
                     except error_perm:
@@ -319,20 +319,17 @@ for filter in filters:
                         if len(db) !=0:
                             if len(db)==len(data):
                                 for i in range(0,len(db)):
-                                    db[i].ver, db[i].sv = [data[i][2], data[i][3]]
+                                    db[i].ver, db[i].sv = [data[i][index[0]], data[i][index[1]]]
                             else:
                                 for i in range(0,min(len(db),len(data))):
-                                    db[i].ver, db[i].sv = [data[i][2], data[i][3]]
+                                    db[len(db)-len(data)+i].ver, db[len(db)-len(data)+i].sv = [data[i][index[0]], data[i][index[1]]]
                         else:
                         # If not, we create the point with the information we have
                             for line in data:
                                 pt = Point()
                                 pt.date = date
                                 # If the type is FD/FO:
-                                if not cd:
-                                    pt.lat, pt.lon, pt.look, pt.alt, pt.ver, pt.sv, pt.type = [line[0], line[1], line[2], line[3], line[4], line[5], types[1]]
-                                else:
-                                    pt.sza, pt.alt, pt.ver, pt.sv, pt.type = [line[0], line[1], line[2], line[3], types[1]]
+                                pt.lat, pt.lon, pt.look, pt.alt, pt.ver, pt.sv, pt.type = [line[0], line[1], line[2], line[3], line[4], line[5], types[1]]
                                 db.append(pt)
                         del data
                     except error_perm:
@@ -341,9 +338,9 @@ for filter in filters:
             # Once we have finished reading all data fields for one date, we write them under our earlier heading.
             for pt in db:
                 if not cd:
-                    write.writerow([pt.date, pt.lon, pt.lat, pt.look, pt.alt, pt.wind, pt.sw, pt.temp, pt.st, pt.ver, pt.sv, pt.type])
+                    write.writerow([pt.date, pt.lat, pt.lon, pt.look, pt.alt, pt.wind, pt.sw, pt.temp, pt.st, pt.ver, pt.sv, pt.type])
                 else:
-                    write.writerow([pt.date, pt.sza, pt.alt, pt.zwind, pt.szw, pt.temp, pt.st, pt.ver, pt.sv, pt.type])
+                    write.writerow([pt.date, pt.sza, pt.alt, pt.zwind, pt.szw, pt.mwind, pt.smw, pt.temp, pt.st, pt.ver, pt.sv, pt.type])
 
             # We log the progress
             print("############################################################# PROGRESS: "+str(round(id/tot*100,2))+"%")
