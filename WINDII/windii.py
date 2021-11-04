@@ -19,17 +19,20 @@ Based on wanted type and which data fields are present, you must edit the parame
 print("Started")
 ########### PARAMETERS
 # Here is a list of filters (i.e. O1S, O2, O+, etc.) Generally, I ran one filter at a time.
-filters = ['O1S']
+filters = ['O2']
 # The possible data flags are 'W' (Wind), 'T' (Temperature), 'V' (VolumeEmissionRate).
 # Each flag must be added to the list if they exist in the folder of the FTP of the filter you are running
-dataflags = ['W', 'T','V']
+dataflags = ['T','V']
 # If you want to run the summary for the CD type, set the following as true.
 cd = False
 ######################
 
 # Preprocessing
-types = ['FD1', 'FD2']
-tag = "FD"
+# types = ['FD1', 'FD2']
+types = ['FO1', 'FO2']
+
+# tag = "FD"
+tag = "FO"
 h = "Latitude"
 index = [4,5]
 if cd:
@@ -207,6 +210,8 @@ for filter in filters:
                 try:
                     ftp.cwd(base+filter+'/Level2/Temperature/'+types[0]+'/')
                     tfile = types[0]+'-'+filter.lower()+"-Temperature-"+date+".csv"
+                    if filter == "OH":
+                        tfile = types[0] + '-' + "oh1" + "-Temperature-" + date + ".csv"
                     # We load our data
                     data = logr(tfile,h)
                     # If we have already added points, we simply edit them to add the relevant data.
@@ -237,6 +242,8 @@ for filter in filters:
                 try:
                     ftp.cwd(base+filter+'/Level2/VolumeEmissionRate/'+types[0]+'/')
                     tfile = types[0]+'-'+filter.lower()+"-VolumeEmissionRate-"+date+".csv"
+                    if filter == "OH":
+                        tfile = types[0] + '-' + "oh1" + "-VolumeEmissionRate-" + date + ".csv"
                     # We load the data
                     data = logr(tfile, h)
                     # If we have already added points, we simply edit them to add the relevant data.
@@ -286,6 +293,8 @@ for filter in filters:
                     try:
                         ftp.cwd(base+filter+'/Level2/Temperature/'+types[1]+'/')
                         tfile = types[1]+'-'+filter.lower()+"-Temperature-"+date+".csv"
+                        if filter == "OH":
+                            tfile = types[1] + '-' + "oh1" + "-Temperature-" + date + ".csv"
                         # We load our data
                         data = logr(tfile,h)
                         # If we have already added points, we simply edit them to add the relevant data.
@@ -295,7 +304,13 @@ for filter in filters:
                                     db[i].temp, db[i].st = [data[i][index[0]], data[i][index[1]]]
                             else:
                                 for i in range(0,min(len(db),len(data))):
-                                    db[len(db)-len(data)+i].temp, db[len(db)-len(data)+i].st = [data[i][index[0]], data[i][index[1]]]
+                                    if len(db)-len(data)+i >= len(db):
+                                        continue
+                                    try:
+                                        db[len(db)-len(data)+i].temp, db[len(db)-len(data)+i].st = [data[i][index[0]], data[i][index[1]]]
+                                    except:
+                                        continue
+
                         else:
                         # If not, we create the point with the information we have
                             for line in data:
@@ -313,6 +328,8 @@ for filter in filters:
                     try:
                         ftp.cwd(base+filter+'/Level2/VolumeEmissionRate/'+types[1]+'/')
                         tfile = types[1]+'-'+filter.lower()+"-VolumeEmissionRate-"+date+".csv"
+                        if filter == "OH":
+                            tfile = types[1] + '-' + "oh1" + "-VolumeEmissionRate-" + date + ".csv"
                         # We load the data
                         data = logr(tfile, h)
                         # If we have already added points, we simply edit them to add the relevant data.
@@ -322,7 +339,10 @@ for filter in filters:
                                     db[i].ver, db[i].sv = [data[i][index[0]], data[i][index[1]]]
                             else:
                                 for i in range(0,min(len(db),len(data))):
-                                    db[len(db)-len(data)+i].ver, db[len(db)-len(data)+i].sv = [data[i][index[0]], data[i][index[1]]]
+                                    try:
+                                        db[len(db)-len(data)+i].ver, db[len(db)-len(data)+i].sv = [data[i][index[0]], data[i][index[1]]]
+                                    except:
+                                        continue
                         else:
                         # If not, we create the point with the information we have
                             for line in data:
