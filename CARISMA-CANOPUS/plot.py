@@ -22,7 +22,7 @@ for file in flist:
     print(database.describe())
     print(database.dtypes)
     f = open("Plots/"+file+"Summary.txt", "w")
-    f.write("Talo Summary: \n"+database.describe().to_string())
+    f.write(file+" Summary: \n"+database.describe().to_string())
     f.close()
     ax1 = database.plot(kind="scatter", y="X", x=database.columns.values.tolist()[0], color='b', label="X", alpha=0.2)
     database.plot(kind='scatter', y='Y', x=database.columns.values.tolist()[0], color='r', ax=ax1, label="Y", alpha=0.2)
