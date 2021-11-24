@@ -47,7 +47,7 @@ def logr(filename, header, l):
 
 # We set up some helper variables before we begin.
 trnbr = 0
-filelist = ["O1S_CD.csv"]
+filelist = ["O+_FD.csv"]
 FTP_HOST = "data.asc-csa.gc.ca"
 FTP_USER = "anonymous"
 FTP_PASS = ""
