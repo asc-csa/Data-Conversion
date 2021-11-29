@@ -65,7 +65,9 @@ for folder in flist:
                 files = ftp.nlst()
                 # We iterate through each file.
                 for file in files:
+                    print(file)
                     filename = file.split("_")[0]+"_"+file.split("_")[1]
+                    print(filename)
                     # We get the data
                     [data, header] = logr(file)
                     # If we have not encountered the file of this specific type (ex. talo_rio or talo_norstar)
