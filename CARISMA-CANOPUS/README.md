@@ -13,4 +13,4 @@ Work has been done for the CANOPUS dataset, but future efforts should be concent
 
 The script canopus.py was created in order to generate summary files for each "type" (i.e. "TALO", "RABB", "FSIM", etc.) divided by sets (i.e. "rio", "norstar", "canopus"). This script fully works currently and contains full documentation within the code. The script carisma.py achieves the same output except for the CARISMA dataset. 
 
-For data validation the **ExamplePlots.pdf** was made containing various plots using the CARISMA dataset. 
+For data validation the **ExamplePlots.pdf** was made containing various plots using the CARISMA dataset. Check it out here [ExamplePlots.pdf](ExamplePlots.pdf)
