@@ -2,12 +2,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import random
 import seaborn as sns
-
+import img2pdf
+import glob
 flist = ["BACK","DAWS", "ESKI", "FSIM", "MCMU","PINA", "RANK", "TALO", "CONT","FCHU", "FSMI", "GILL", "ISLL", "RABB"]
-# flist = ["TALO" ]
 
-plt.figure(figsize=(8, 8))
+# plt.figure(figsize=(20, 15))
+summary = ""
 for file in flist:
+    plt.figure(figsize=(10, 8))
     print("Working for "+file+".")
     # We load in the summary file, which takes a while
     n = sum(1 for line in open(file+".csv")) - 1  # number of records in file (excludes header)
@@ -21,39 +23,47 @@ for file in flist:
     print("Done loading csv")
     print(database.describe())
     print(database.dtypes)
-    f = open("Plots/"+file+"Summary.txt", "w")
-    f.write(file+" Summary: \n"+database.describe().to_string())
-    f.close()
-    ax1 = database.plot(kind="scatter", y="X", x=database.columns.values.tolist()[0], color='b', label="X", alpha=0.2)
-    database.plot(kind='scatter', y='Y', x=database.columns.values.tolist()[0], color='r', ax=ax1, label="Y", alpha=0.2)
-    database.plot(kind='scatter', y='Z', x=database.columns.values.tolist()[0], color='g', ax=ax1, label="Z", alpha=0.2)
+
+    summary = summary+file+" Summary: \n"+database.describe().to_string()+"\n\n"
+    ax1 = database.plot(kind="scatter", y="X", x=database.columns.values.tolist()[0], color='b', label="X", alpha=0.05)
+    database.plot(kind='scatter', y='Y', x=database.columns.values.tolist()[0], color='r', ax=ax1, label="Y", alpha=0.05)
+    database.plot(kind='scatter', y='Z', x=database.columns.values.tolist()[0], color='g', ax=ax1, label="Z", alpha=0.05)
     ax1.set_ylabel("X, Y and Z readings of Earth's magnetic field (nT)")
-    plt.tight_layout()
+    ax1.set_ylabel("Date (yyyy/mm/dd)")
+    plt.title(file+" Site: X, Y and Z readings of Earth's magnetic field vs Date")
     plt.savefig("Plots/"+file+"Date.png")
-    ax2 = database.plot(kind="scatter", y="X", x=database.columns.values.tolist()[1], color='b', label="X", alpha=0.2)
-    database.plot(kind='scatter', y='Y', x=database.columns.values.tolist()[1], color='r', ax=ax2, label="Y", alpha=0.2)
-    database.plot(kind='scatter', y='Z', x=database.columns.values.tolist()[1], color='g', ax=ax2, label="Z", alpha=0.2)
+    ax2 = database.plot(kind="scatter", y="X", x=database.columns.values.tolist()[1], color='b', label="X", alpha=0.05)
+    database.plot(kind='scatter', y='Y', x=database.columns.values.tolist()[1], color='r', ax=ax2, label="Y", alpha=0.05)
+    database.plot(kind='scatter', y='Z', x=database.columns.values.tolist()[1], color='g', ax=ax2, label="Z", alpha=0.05)
     ax2.set_ylabel("X, Y and Z readings of Earth's magnetic field (nT)")
-    ax2.set_xlabel("Date")
-    plt.tight_layout()
-    plt.savefig("Plots/"+file+"Time.png")
-    ax3 = database.plot(kind="scatter", y="Y", x="X", alpha=0.1)
+    ax2.set_xlabel("Time of day (hh/mm/ss)")
+    plt.title(file+" Site: X, Y and Z readings of Earth's magnetic field vs Time of Day")
+    plt.savefig("Plots/" + file + "Time.png")
+    ax3 = database.plot(kind="scatter", y="Y", x="X", alpha=0.05)
     ax3.set_ylabel("Y readings of Earth's magnetic field (nT)")
     ax3.set_xlabel("X readings of Earth's magnetic field (nT)")
-    plt.tight_layout()
-    plt.savefig("Plots/"+file+"YvsX.png")
-    ax4 = database.plot(kind="scatter", y="Z", x="X", alpha=0.1)
+    plt.title(file+" Site: Y vs X readings of Earth's magnetic field")
+    plt.savefig("Plots/" + file + "YvsX.png")
+    ax4 = database.plot(kind="scatter", y="Z", x="X", alpha=0.05)
     ax4.set_ylabel("Z readings of Earth's magnetic field (nT)")
     ax4.set_xlabel("X readings of Earth's magnetic field (nT)")
-    plt.tight_layout()
-    plt.savefig("Plots/"+file+"ZvsX.png")
+    plt.title(file+" Site: Z vs X readings of Earth's magnetic field")
+    plt.savefig("Plots/" + file + "ZvsX.png")
     pplot = sns.pairplot(database)
     fig = pplot.fig
-    print(type(fig))
-    print(fig)
+    fig.suptitle(file+" Site: pairplot", x=0.55)
     fig.savefig("Plots/"+file+"pairplot.png")
 
-    print(database[database.columns.values.tolist()[-1]].value_counts())
+
+f = open("Plots/Summary.txt", "w")
+f.write(summary)
+f.close()
+images = []
+for name in glob.glob('Plots/'+"*"+".png"):
+    print(name)
+    images.append(name)
+with open("ExamplePlots.pdf", "wb") as f:
+    f.write(img2pdf.convert(images))
 
 
 

@@ -1,0 +1,23 @@
+Data dictionary: 
+File naming convention: Output files after running this script are named with the following convention, (emission_channel)-(field_of_view).csv. E.g., the file O1S-FD represents data from the O(1S) emission line using forward- and backward-looking observations.
+Important Note: Within the CSV file for any float values, NaN values are represented as 1e32. Missing data values are represented by N/A, Missing data is caused by either missing or corrupted data values from original Windii files.
+
+
+Variable Name, Description, Data Type, Units, Example
+date, Date data was collected, Date/Time, Year-Month-Day, 1991-11-07
+lat, Latitude , Float, Degrees, -27.12
+lon, Longitude , Float, Degrees, 312.58
+look, , Float, , 75.07
+alt, Altitude, Float, Kilometre, 301.49
+wind, Wind speed, Float, metres/second, -1313
+sw, Standard deviation of Wind, Float, metres/second, 495.3
+temp, Temperature, Float, Kelvin, 1456
+st, Standard deviation of  Temperature, Float, Kelvin, 1009
+ver, Volume Emission Rate, Float, photons/cm3, 13.43
+sv, Standard deviation of Volume Emission Rate, Float, photons/cm3, 1.553
+sza, Solar Zenith Angle, Float, Degrees, 137.21
+zwind, Zonal Wind, Float, metres/second, 91.44
+szw, Standard deviation of Zonal Wind, Float, metres/second, 80.25
+mwind, Merid Wind, Float, metres/second, 6.099
+smw, Standard deviation of Merid Wind, Float, metres/second, 8.738
+type, Field of view where data was collected, String, FD1, FD2 or CD, FD2

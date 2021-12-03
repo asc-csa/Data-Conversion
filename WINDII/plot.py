@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy import stats
+import glob
+import img2pdf
+
 
 # We import the relevant packages and we set the font size for the plots
 plt.rcParams.update({'font.size': 22})
@@ -54,3 +57,10 @@ for file in filelist:
             f.set_figheight(15)
             # We save the figure
             f.savefig(filename+"_"+dataname+"_"+geoname+".png")
+
+images = []
+for name in glob.glob('Plots/'+"*"+".png"):
+    print(name)
+    images.append(name)
+with open("ExamplePlots.pdf", "wb") as f:
+    f.write(img2pdf.convert(images))

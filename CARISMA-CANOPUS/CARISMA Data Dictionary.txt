@@ -1,0 +1,12 @@
+Data dictionary: 
+
+File naming convention: Output files after running this script are named after the site the data was recorded at, such as TALO, ESKT, FSIM. 
+
+Column Name, Description, Data Type, Units, Example
+Date, Date data was collected, Date/Time, Year-Month-Day, 1994-01-18
+Time, Time data was collected, Date/Time, Hour-Minute-Second, 1:25:03 AM
+X, X vector reading of Earth’s Magnetic Field, Float, nT (nano Tesla), 4981.925
+Y, Y vector reading of Earth’s Magnetic Field, Float, nT (nano Tesla), 12953.4
+Z, Z vector reading of Earth’s Magnetic Field, Float, nT (nano Tesla), 37907.273
+F=. if the data is valid anything else the data is suspect., Flag for the reliability of data, String, N/A, . or ?
+
