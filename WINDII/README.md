@@ -46,9 +46,4 @@ To run the script x.py you need to make sure there is **a folder named "temp" di
 
 In the terminal.
 
-An example of the usefulness of these summary files is the simple creation of graphics like this:
-![O1D_FD_Volume Emission Rate_altitude ](https://user-images.githubusercontent.com/56747050/130168857-6e294c07-1f18-4e49-8137-cfc2a49c275d.png)
-
-(Keep in mind that this graph is ploting multiple millions of points).
-
-You will find the rest of the graphs in the "Plots" folder.
+For data validation the **ExamplePlots.pdf** was made containing various plots using the WINDII dataset. Check it out here [ExamplePlots.pdf](ExamplePlots.pdf)
