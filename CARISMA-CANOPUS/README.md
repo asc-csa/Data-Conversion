@@ -11,4 +11,6 @@ Le script canopus.py a été créé afin de générer des fichiers sommaires pou
 This dataset is still being worked on. There is overlap between both the datasets CANOPUS and CARISMA as CARISMA is simply a newer iteration of CANOPUS.
 Work has been done for the CANOPUS dataset, but future efforts should be concentrated on CARISMA as it is the dataset that is on the CSA data portal. The folder structures are extremely similar if not exactly the same, with the only difference being filenames.
 
-The script canopus.py was created in order to generate summary files for each "type" (i.e. "TALO", "RABB", "FSIM", etc.) divided by sets (i.e. "rio", "norstar", "canopus"). This script fully works currently and contains full documentation within the code. Next efforts on this should be to evaluate what is valuable in the CANOPUS dataset hosted on the FTP as well as what is valuable in the CARISMA dataset also hosted on the FTP, and see what can be done on the current canopus.py script to adapt it to the CARISMA dataset, produce summary files, validate them and create insightful figures using the summary files.
+The script canopus.py was created in order to generate summary files for each "type" (i.e. "TALO", "RABB", "FSIM", etc.) divided by sets (i.e. "rio", "norstar", "canopus"). This script fully works currently and contains full documentation within the code. The script carisma.py achieves the same output except for the CARISMA dataset. 
+
+For data validation the **ExamplePlots.pdf** was made containing various plots using the CARISMA dataset. 
